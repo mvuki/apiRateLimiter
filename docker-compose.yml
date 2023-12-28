@@ -1,0 +1,32 @@
+services:
+  nginx:
+    build:
+      context: ./nginx/
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - static_files:/home/app/staticfiles
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: hello
+      MYSQL_DATABASE: companyxyz
+      MYSQL_USER: root
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      
+  webapp:
+    image: your-spring-boot-image:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+

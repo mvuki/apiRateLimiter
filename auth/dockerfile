@@ -1,0 +1,11 @@
+# Dockerfile
+FROM maven:3.8.4-openjdk-17 AS build
+WORKDIR /usr/src/app
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM adoptopenjdk:17-jre-hotspot
+WORKDIR /usr/src/app
+COPY --from=build /usr/src/app/target/your-spring-app.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
